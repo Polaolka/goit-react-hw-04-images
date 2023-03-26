@@ -8,7 +8,7 @@ export const Searchbar = ({ onSubmit }) => {
 const [searchQuery, setSearchQuery] = useState('')
 
   const handleInputChange = e => {
-    setSearchQuery(s => s = e.target.value.trim().toLowerCase());
+    setSearchQuery(s => s = e.target.value.toLowerCase());
   };
 
   const handleSubmit = e => {
