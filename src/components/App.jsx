@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BsArrowUp } from 'react-icons/bs';
@@ -9,24 +9,42 @@ import { Loader } from '../components/Loader/Loader';
 import { getImages } from '../components/Api/Api';
 import { LoadMoreBtn } from '../components/Button/Button';
 import { Container } from '../components/Container/Container';
-import css from './App.module.css'
+import css from './App.module.css';
 
-export class App extends Component {
-  state = {
-    page: 1,
-    maxPage: 1,
-    images: [],
-    query: '',
-    showModal: false,
-    isImagesLoading: false,
-    total: 0,
-    totalPage: 0,
-    showLoadMore: false,
-    largeImageURL: '',
-    openImgTags: '',
-  };
+export const App = () => {
 
-  handleFormSubmit = searchQuery => {
+  const [page, setPage] = useState(1);
+  const [images, setImages] = useState([]);
+  const [query, setQuery] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [isImagesLoading, setIsImagesLoading] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+  const [largeImageURL, setLargeImageURL] = useState('');
+  const [openImageTags, setOpenImageTags] = useState('');
+
+  useEffect(() => {
+    if (query === '')  return;
+
+    setIsImagesLoading(true);
+    
+    async function fetchData() {
+      const response = await getImages(query, page);
+      if (response.images.length === 0) toast('No images found');
+      if (response.images.length > 0 && page === 1)
+        toast(`found ${response.totalImg} images`);
+      setImages(s => [...s, ...response.images]);
+      setTotal(response.totalImg);
+      setIsImagesLoading(false);
+  
+      setTotalPage(response.totalPage);
+      if (page === response.totalPage && response.totalPage > 1)
+        toast(`this is the last page`);
+    }
+    fetchData();
+  }, [query, page]);
+
+  const handleFormSubmit = searchQuery => {
     window.scrollTo(0, 0);
     if (searchQuery.trim() === '') {
       toast("Search request shouldn't be empty", {
@@ -34,80 +52,55 @@ export class App extends Component {
       });
       return;
     }
-    this.setState({ query: searchQuery, page: 1, images: [] });
+    setQuery(searchQuery);
+    setPage(1);
+    setImages([]);
   };
 
-  async componentDidUpdate(_, prevState) {
-    if (
-      prevState.query !== this.state.query ||
-      prevState.page !== this.state.page
-    ) {
-      this.setState({ isImagesLoading: true });
-        const response = await getImages(this.state.query, this.state.page);
-        this.setState(prevState => ({
-          images: [...prevState.images, ...response.images],
-          total: response.totalImg,
-          isImagesLoading: false,
-          totalPage: response.totalPage,
-        }));
-        
-        if (response.images.length === 0) toast('No images found');
+  
 
-        if (response.images.length > 0 && this.state.page === 1)
-          toast(`found ${response.totalImg} images`);
+  const toggleModal = () => {
+    setShowModal(s => (s = !showModal));
+  };
 
-        if (this.state.page === response.totalPage && response.totalPage > 1)
-          toast(`this is the last page`);
+  const handleLoadMore = () => {
+    setPage(s => (s += 1));
+  };
+
+  const handleOpenModal = e => {
+    if (e.target.nodeName === 'IMG');
+    {
+      const openImgBigURL = e.target.getAttribute('data-modal');
+      const openImgDescr = e.target.getAttribute('data-tags');
+      setLargeImageURL(openImgBigURL);
+      setOpenImageTags(openImgDescr);
+      toggleModal();
     }
-  }
-
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
   };
-
-  handleLoadMore = () => {
-    this.setState(prevState => {
-      return { page: prevState.page + 1 };
-    });
-  };
-
-  handleOpenModal = (e) => {
-    if(e.target.nodeName === 'IMG');
-    {const openImg = e.target.getAttribute("data-modal");
-    const openImgDescr = e.target.getAttribute("data-tags");
-    this.setState({
-      largeImageURL: openImg, 
-      openImgTags: openImgDescr})
-    this.toggleModal();
-
-
-    }
-  }
-
-  render() {
-    const { images, showModal, total, isImagesLoading, page, totalPage, largeImageURL, openImgTags } =
-      this.state;
-
-    return (
-      <div>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        <Container>
+  return (
+    <div>
+      <Searchbar onSubmit={handleFormSubmit} />
+      <Container>
         {total > 0 ? (
-          <ImageGallery images={images} 
-          onClickImg={this.handleOpenModal}/>
+          <ImageGallery images={images} onClickImg={handleOpenModal} />
         ) : (
-          <p className={css.empty}>So far it's empty, start searching <BsArrowUp/></p>
+          <p className={css.empty}>
+            So far it's empty, start searching <BsArrowUp />
+          </p>
         )}
         {isImagesLoading && <Loader />}
         {total > 0 && page < totalPage && (
-          <LoadMoreBtn onloadMore={this.handleLoadMore} />
+          <LoadMoreBtn onloadMore={handleLoadMore} />
         )}
-        {showModal && <Modal onClose={this.toggleModal} largeImageURL={largeImageURL} openImgTags={openImgTags}/>}
-        </Container>
-        <ToastContainer autoClose={2500}/>
-      </div>
-    );
-  }
-}
+        {showModal && (
+          <Modal
+            onClose={toggleModal}
+            largeImageURL={largeImageURL}
+            openImageTags={openImageTags}
+          />
+        )}
+      </Container>
+      <ToastContainer autoClose={2500} />
+    </div>
+  );
+};

@@ -1,29 +1,26 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import css from '../Searchbar/Searchbar.module.css';
 import { FcSearch } from 'react-icons/fc';
 import { IconContext } from 'react-icons';
 
-export class Searchbar extends Component {
-  state = {
-    searchQuery: '',
+export const Searchbar = ({ onSubmit }) => {
+const [searchQuery, setSearchQuery] = useState('')
+
+  const handleInputChange = e => {
+    setSearchQuery(s => s = e.target.value.trim().toLowerCase());
   };
 
-  handleInputChange = e => {
-    this.setState({ searchQuery: e.currentTarget.value.toLowerCase() });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state.searchQuery);
+    onSubmit(searchQuery);
 
-    this.setState({ searchQuery: '' });
+    setSearchQuery('');
   };
 
-  render() {
     return (
       <header className={css.searchbar}>          
-            <form className={css.form} onSubmit={this.handleSubmit}>
+            <form className={css.form} onSubmit={handleSubmit}>
               <button type="submit" className={css.button}>
                 <IconContext.Provider value={{ size: '25px' }}>
                   <FcSearch />
@@ -34,15 +31,15 @@ export class Searchbar extends Component {
                 type="text"
                 autoComplete="off"
                 placeholder="Search images and photos"
-                onChange={this.handleInputChange}
-                value={this.state.searchQuery}
+                onChange={handleInputChange}
+                value={searchQuery}
               />
             </form>
           
         
       </header>
     );
-  }
+
 }
 
 Searchbar.propTypes = {
