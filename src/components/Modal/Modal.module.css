@@ -1,0 +1,48 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1200;
+    overflow-y: hidden;
+}
+
+.modal {
+    max-width: 75vw;
+    max-height: 75vh;
+    position: relative;
+
+}
+.btnClose {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 4px;
+    color: white;
+    background-color: rgba(100, 100, 100, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+}
+.largeImage {
+    max-width: 75vw;
+    max-height: 75vh;
+    object-fit: cover;
+}
+
+.tagsBox {
+    width: 100%;
+    padding: 4px 10px 8px;
+
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+}

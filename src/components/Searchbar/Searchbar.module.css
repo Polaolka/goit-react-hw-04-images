@@ -1,0 +1,117 @@
+.searchbar {
+    top: 0;
+    left: 0;
+    position: sticky;
+    z-index: 1110;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 64px;
+    padding-right: 24px;
+    padding-left: 24px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    color: #fff;
+    background-image: repeating-linear-gradient(
+      45deg,
+      #3f62c5,
+      #3f62c5 15px,
+      #629bf1 15px,
+      #629bf1 30px
+      );
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+      0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+}
+.searchbarReverce {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 50%;
+  width: 100%;
+  background-image: repeating-linear-gradient(
+      -45deg,
+      #3f62c5,
+      #3f62c5 15px,
+      #629bf1 15px,
+      #629bf1 30px
+    );
+    transform: translateX(1turn);
+}
+/* 
+#3f62c5,
+#3f62c5 15px,
+#629bf1 15px,
+#629bf1 30px */
+
+.form {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    background-color: rgba(250, 250, 250, 0.5);
+    border-radius: 5px;
+    overflow: hidden;
+    transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1100;
+}
+.form:hover,
+.form:focus-within {
+  background-color: rgba(250, 250, 250, 0.8);
+  width: 400px;
+}
+
+.button {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background-size: 40%;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.6;
+    transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    outline: none;
+    background-color: transparent;
+    border-right: 1px solid dimgray;
+}
+
+.button:hover {
+    opacity: 1;
+  }
+
+.buttonLabel {
+    position: absolute;
+    /* width: 20px;
+    height: 20px; */
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    clip-path: inset(50%);
+    border: 0;
+    
+}
+
+.input {
+    display: inline-block;
+    width: 100%;
+    font: inherit;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    padding-left: 8px;
+    padding-right: 4px;
+    background-color: transparent;
+    color:rgba(0, 0, 0, 0.7)
+}
+
+.input:focus {
+  color:rgba(0, 0, 0, 0.8)
+}
+
+.input::placeholder {
+    font: inherit;
+    font-size: 18px;
+    background-color: transparent;
+  }
